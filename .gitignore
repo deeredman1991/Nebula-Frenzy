@@ -1,0 +1,5 @@
+*.pypirc
+*.bat
+*.pyc
+
+test.py
