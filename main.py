@@ -21,19 +21,21 @@ class Background(Widget):
         
         self.image = Image(source=source)
         self.image.size = Window.size
+        self.image.height = Window.height*4
         self.add_widget(self.image)
         
-        self.image_dupe = Image(source=source, y=self.height)
+        self.image_dupe = Image(source=source, y=self.image.height-1)
         self.image_dupe.size = Window.size
+        self.image_dupe.height = Window.height*4
         self.add_widget(self.image_dupe)
         
     def update(self, scale):
-        self.image.y -= 0.5 * scale
-        self.image_dupe.y -= 0.5 * scale
+        self.image.y -= 1 * scale
+        self.image_dupe.y -= 1 * scale
         
         if self.image.top <= 0:
             self.image.y = 0
-            self.image_dupe.y = self.height
+            self.image_dupe.y = self.image.height-1
     
 class Game(Widget):
     def __init__(self):
@@ -45,7 +47,7 @@ class Game(Widget):
         
         w, h = Window.size
         w = float(w)/ self.background.width
-        h = float(h)/ self.background.height
+        h = float(h)/ 384
         self.scale = min(w, h)
         
         Clock.schedule_interval(self.update, 1.0/60.0)
