@@ -6,12 +6,26 @@ from kivy.clock import Clock
 
 
 
-class Spirte(Image):
+class Sprite(Image):
     def __init__(self, scale, **kwargs):
         super(Sprite, self).__init__(allow_stretch = True, **kwargs)
         self.texture.mag_filter = 'nearest'
         w, h = self.texture_size
         self.size = (scale * w, scale * h)
+        
+class PlayerShip(Sprite):
+    def __init__(self, scale, center=(0,0), **kwargs):
+        super(PlayerShip, self).__init__( scale*0.8, center=center, source='images/PlayerShip1.png')
+        self.velocity_y = 0
+        self.velocity_x = 0
+        
+    def update(self):
+        self.y += self.velocity_y
+        self.x += self.velocity_x
+        
+class DPadButton(Sprite):
+    def __init__(self, scale, **kwargs):
+        super(DPadButton, self).__init__(source='images/DPadButton.png', pos=pos)
         
 class Background(Widget):
     def __init__(self, source):
@@ -49,6 +63,9 @@ class Game(Widget):
         w = float(w)/ self.background.width
         h = float(h)/ 384
         self.scale = min(w, h)
+        
+        self.player = PlayerShip( self.scale, center=(self.background.width/2, self.background.height/2) )
+        self.add_widget(self.player)
         
         Clock.schedule_interval(self.update, 1.0/60.0)
         

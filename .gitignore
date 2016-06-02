@@ -2,4 +2,6 @@
 *.bat
 *.pyc
 
+images/Resources/*
+
 test.py
