@@ -4,6 +4,10 @@ from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.clock import Clock
 
+from kivy.graphics import Color, Rectangle
+
+import random
+
 
 
 class Sprite(Image):
@@ -23,9 +27,25 @@ class PlayerShip(Sprite):
         self.y += self.velocity_y
         self.x += self.velocity_x
         
-class DPadButton(Sprite):
-    def __init__(self, scale, **kwargs):
-        super(DPadButton, self).__init__(source='images/DPadButton.png', pos=pos)
+class DPad(Widget):
+    def __init__(self, scale, player, **kwargs):
+        super(DPad, self).__init__(**kwargs)
+        
+        self.image = Image(source = 'images/DPad.png')
+        self.add_widget(self.image)
+        
+        self.size = self.image.size
+        
+        '''
+        with self.canvas:
+            Color(0.5, 0.5, 1.0)
+            Rectangle(pos=self.pos, size=self.size)
+        '''
+        
+        self.player = player
+        
+    def on_touch_down(self, touch):
+        print(touch)
         
 class Background(Widget):
     def __init__(self, source):
@@ -67,6 +87,11 @@ class Game(Widget):
         self.player = PlayerShip( self.scale, center=(self.background.width/2, self.background.height/2) )
         self.add_widget(self.player)
         
+        print(self.background.pos)
+        
+        self.dpad = DPad ( self.scale, self.player, pos=self.background.pos )
+        self.add_widget( self.dpad )
+        
         Clock.schedule_interval(self.update, 1.0/60.0)
         
     def update(self, dt):
@@ -74,6 +99,7 @@ class Game(Widget):
 
 class GameApp(App):
     def build(self):
+        Window.size = (random.randint(200, 1000), random.randint(200, 1000))
         self.title = 'Nebula Frenzy'
         #self.icon = 'images/icon.png'
         return Game()
