@@ -53,19 +53,20 @@ class Background(Widget):
         
         self.size = Window.size
         
-        self.image = Image(source=source)
+        self.image = Image(allow_stretch=True, keep_ratio = False, source=source)
         self.image.size = Window.size
         self.image.height = Window.height*4
         self.add_widget(self.image)
         
-        self.image_dupe = Image(source=source, y=self.image.height-1)
+        self.image_dupe = Image(allow_stretch=True, keep_ratio = False, source=source)
         self.image_dupe.size = Window.size
         self.image_dupe.height = Window.height*4
+        self.image_dupe.y = self.image.height-1
         self.add_widget(self.image_dupe)
         
     def update(self, scale):
-        self.image.y -= 1 * scale
-        self.image_dupe.y -= 1 * scale
+        self.image.y -= 5 * scale
+        self.image_dupe.y -= 5 * scale
         
         if self.image.top <= 0:
             self.image.y = 0
@@ -100,6 +101,7 @@ class Game(Widget):
 class GameApp(App):
     def build(self):
         Window.size = (random.randint(200, 1000), random.randint(200, 1000))
+        #Window.size = (300, 500)
         self.title = 'Nebula Frenzy'
         #self.icon = 'images/icon.png'
         return Game()
