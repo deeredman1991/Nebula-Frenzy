@@ -31,7 +31,7 @@ class DPad(Widget):
     def __init__(self, scale, player, **kwargs):
         super(DPad, self).__init__(**kwargs)
         
-        self.image = Image(source = 'images/DPad.png')
+        self.image = Sprite(scale, source = 'images/DPad.png')
         self.add_widget(self.image)
         
         self.size = self.image.size
@@ -46,6 +46,11 @@ class DPad(Widget):
         
     def on_touch_down(self, touch):
         print(touch)
+        x, y = touch.pos
+        print(x)
+        print(y)
+        if x  < self.width and y < self.height:
+            print ("HitMe!")
         
 class Background(Widget):
     def __init__(self, source):
