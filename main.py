@@ -19,7 +19,7 @@ class Sprite(Image):
         
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
-        super(PlayerShip, self).__init__( scale*0.5, center=(background.width/2, background.height/2), source='images/PlayerShip1.png')
+        super(PlayerShip, self).__init__( scale*0.75, center=(background.width/2, background.height/2), source='images/PlayerShip1.png')
         
         self.background = background
         
@@ -38,7 +38,16 @@ class PlayerShip(Sprite):
             self.y = 0
         elif self.y > self.background.height-self.height:
             self.y = self.background.height-self.height
+            
+class PlayerLazer(Sprite):
+    def __init__(self, scale, player=None, **kwargs):
+        super(PlayerLazer, self).__init__( scale, pos=player.pos, source='images/BlueLazer.png')
+        self.y += player.height
+        self.x = player.x - player.width*0.075
         
+        self.speed = 6
+    def update(self):
+        self.y += self.speed
         
 class DPad(Widget):
     def __init__(self, scale, player, **kwargs):
@@ -116,7 +125,10 @@ class Game(Widget):
         self.player = PlayerShip( self.scale, background=self.background )
         self.add_widget(self.player)
         
-        print(self.background.pos)
+        self.bullettest = PlayerLazer( self.scale, self.player)
+        self.add_widget(self.bullettest)
+        
+        self.bulletlist = [self.bullettest]
         
         self.dpad = DPad ( self.scale, self.player, pos=self.background.pos )
         self.add_widget( self.dpad )
@@ -126,6 +138,9 @@ class Game(Widget):
     def update(self, dt):
         self.background.update(self.scale)
         self.player.update()
+        
+        for bullet in self.bulletlist:
+            bullet.update()
 
 class GameApp(App):
     def build(self):
