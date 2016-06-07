@@ -18,39 +18,62 @@ class Sprite(Image):
         self.size = (scale * w, scale * h)
         
 class PlayerShip(Sprite):
-    def __init__(self, scale, center=(0,0), **kwargs):
-        super(PlayerShip, self).__init__( scale*0.8, center=center, source='images/PlayerShip1.png')
-        self.velocity_y = 0
+    def __init__(self, scale, background=None, **kwargs):
+        super(PlayerShip, self).__init__( scale*0.5, center=(background.width/2, background.height/2), source='images/PlayerShip1.png')
+        
+        self.background = background
+        
+        self.speed = 5
         self.velocity_x = 0
+        self.velocity_y = 0
         
     def update(self):
-        self.y += self.velocity_y
         self.x += self.velocity_x
+        self.y += self.velocity_y
+        if self.x < 0:
+            self.x = 0
+        elif self.x > self.background.width-self.width:
+            self.x = self.background.width-self.width
+        if self.y < 0:
+            self.y = 0
+        elif self.y > self.background.height-self.height:
+            self.y = self.background.height-self.height
+        
         
 class DPad(Widget):
     def __init__(self, scale, player, **kwargs):
         super(DPad, self).__init__(**kwargs)
         
-        self.image = Sprite(scale, source = 'images/DPad.png')
+        self.image = Sprite(scale*1.5, source = 'images/DPad.png')
         self.add_widget(self.image)
         
         self.size = self.image.size
         
-        '''
-        with self.canvas:
-            Color(0.5, 0.5, 1.0)
-            Rectangle(pos=self.pos, size=self.size)
-        '''
-        
         self.player = player
         
+        self.deadzone = 0.15
+        
+    def touch_handler(self, touch):
+        tx, ty = touch.pos
+        if tx  < self.width and ty < self.height:
+            if tx > (self.width/2+self.width*self.deadzone):
+                self.player.velocity_x = self.player.speed
+            elif tx < (self.width/2-self.width*self.deadzone):
+                self.player.velocity_x = -self.player.speed
+            if ty > (self.height/2+self.height*self.deadzone):
+                self.player.velocity_y = self.player.speed
+            elif ty < (self.height/2-self.height*self.deadzone):
+                self.player.velocity_y = -self.player.speed
+    
     def on_touch_down(self, touch):
-        print(touch)
-        x, y = touch.pos
-        print(x)
-        print(y)
-        if x  < self.width and y < self.height:
-            print ("HitMe!")
+        self.touch_handler(touch)
+        
+    def on_touch_move(self, touch):
+        self.touch_handler(touch)
+    
+    def on_touch_up(self, *ignore):
+        self.player.velocity_x = 0
+        self.player.velocity_y = 0
         
 class Background(Widget):
     def __init__(self, source):
@@ -70,8 +93,8 @@ class Background(Widget):
         self.add_widget(self.image_dupe)
         
     def update(self, scale):
-        self.image.y -= 5 * scale
-        self.image_dupe.y -= 5 * scale
+        self.image.y -= 1 * scale
+        self.image_dupe.y -= 1 * scale
         
         if self.image.top <= 0:
             self.image.y = 0
@@ -90,7 +113,7 @@ class Game(Widget):
         h = float(h)/ 384
         self.scale = min(w, h)
         
-        self.player = PlayerShip( self.scale, center=(self.background.width/2, self.background.height/2) )
+        self.player = PlayerShip( self.scale, background=self.background )
         self.add_widget(self.player)
         
         print(self.background.pos)
@@ -102,6 +125,7 @@ class Game(Widget):
         
     def update(self, dt):
         self.background.update(self.scale)
+        self.player.update()
 
 class GameApp(App):
     def build(self):
