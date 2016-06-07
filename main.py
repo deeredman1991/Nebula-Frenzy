@@ -125,10 +125,10 @@ class Game(Widget):
         self.player = PlayerShip( self.scale, background=self.background )
         self.add_widget(self.player)
         
-        self.bullettest = PlayerLazer( self.scale, self.player)
-        self.add_widget(self.bullettest)
+        self.projectiletest = PlayerLazer( self.scale, self.player)
+        self.add_widget(self.projectiletest)
         
-        self.bulletlist = [self.bullettest]
+        self.projectileList = [self.projectiletest]
         
         self.dpad = DPad ( self.scale, self.player, pos=self.background.pos )
         self.add_widget( self.dpad )
@@ -139,8 +139,8 @@ class Game(Widget):
         self.background.update(self.scale)
         self.player.update()
         
-        for bullet in self.bulletlist:
-            bullet.update()
+        for projectile in self.projectileList:
+            projectile.update()
 
 class GameApp(App):
     def build(self):
