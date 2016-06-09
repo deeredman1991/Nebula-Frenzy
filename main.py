@@ -45,9 +45,53 @@ class PlayerLazer(Sprite):
         self.y += player.height
         self.x = player.x + player.width*0.15
         
+        self.collision = False
+        
         self.speed = 6
     def update(self):
         self.y += self.speed
+        
+        if self.y >= self.parent.background.height:
+            self.collision = True
+        
+        if self.collision == True:
+            self.parent.projectileList.remove(self)
+            self.parent.remove_widget(self)
+        
+class LazerButton(Widget):
+    def __init__(self, scale, background, **kwargs):
+        super(LazerButton, self).__init__(**kwargs)
+        
+        self.image = Sprite(scale*1.5, source = 'images/LazerButton.png')
+        
+        self.size = self.image.size
+        
+        self.right = self.image.right = background.right-30*scale
+        self.y = self.image.y = 30*scale
+        
+        self.add_widget(self.image)
+        
+        '''
+        with self.canvas:
+            Color(0.5,1,1,1)
+            Rectangle(pos = self.pos, size = self.size)
+        #'''
+        
+        self.spawnlazer = False
+    
+    def on_touch_down(self, touch):
+        tx, ty = touch.pos
+        if tx  <= self.x+self.width and ty <= self.y+self.height and tx >= self.x and ty >= self.y:
+            self.spawnlazer = True
+            
+    def on_touch_up(self, touch):
+        self.spawnlazer = False
+        
+    def update(self):
+        if self.spawnlazer == True:
+            new_projectile = PlayerLazer(self.parent.scale, self.parent.player)
+            self.parent.add_widget(new_projectile)
+            self.parent.projectileList.append(new_projectile)
         
 class DPad(Widget):
     def __init__(self, scale, player, **kwargs):
@@ -101,9 +145,9 @@ class Background(Widget):
         self.image_dupe.y = self.image.height-1
         self.add_widget(self.image_dupe)
         
-    def update(self, scale):
-        self.image.y -= 1 * scale
-        self.image_dupe.y -= 1 * scale
+    def update(self):
+        self.image.y -= 1 * self.parent.scale
+        self.image_dupe.y -= 1 * self.parent.scale
         
         if self.image.top <= 0:
             self.image.y = 0
@@ -125,19 +169,23 @@ class Game(Widget):
         self.player = PlayerShip( self.scale, background=self.background )
         self.add_widget(self.player)
         
-        self.projectiletest = PlayerLazer( self.scale, self.player)
-        self.add_widget(self.projectiletest)
+        #self.projectiletest = PlayerLazer( self.scale, self.player)
+        #self.add_widget(self.projectiletest)
         
-        self.projectileList = [self.projectiletest]
+        self.projectileList = []
         
         self.dpad = DPad ( self.scale, self.player, pos=self.background.pos )
         self.add_widget( self.dpad )
         
+        self.lazerbutton = LazerButton ( self.scale, self.background)
+        self.add_widget ( self.lazerbutton )
+        
         Clock.schedule_interval(self.update, 1.0/60.0)
         
     def update(self, dt):
-        self.background.update(self.scale)
+        self.background.update()
         self.player.update()
+        self.lazerbutton.update()
         
         for projectile in self.projectileList:
             projectile.update()
