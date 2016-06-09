@@ -43,7 +43,7 @@ class PlayerLazer(Sprite):
     def __init__(self, scale, player=None, **kwargs):
         super(PlayerLazer, self).__init__( scale, pos=player.pos, source='images/BlueLazer.png')
         self.y += player.height
-        self.x = player.x - player.width*0.075
+        self.x = player.x + player.width*0.15
         
         self.speed = 6
     def update(self):
