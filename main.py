@@ -27,6 +27,8 @@ class PlayerShip(Sprite):
         self.velocity_x = 0
         self.velocity_y = 0
         
+        self.firerate = 0.1
+        
     def update(self):
         self.x += self.velocity_x
         self.y += self.velocity_y
@@ -59,7 +61,7 @@ class PlayerLazer(Sprite):
             self.parent.remove_widget(self)
         
 class LazerButton(Widget):
-    def __init__(self, scale, background, **kwargs):
+    def __init__(self, scale, background, player, **kwargs):
         super(LazerButton, self).__init__(**kwargs)
         
         self.image = Sprite(scale*1.5, source = 'images/LazerButton.png')
@@ -71,27 +73,30 @@ class LazerButton(Widget):
         
         self.add_widget(self.image)
         
+        self.player = player
+        
         '''
         with self.canvas:
             Color(0.5,1,1,1)
             Rectangle(pos = self.pos, size = self.size)
         #'''
-        
-        self.spawnlazer = False
     
     def on_touch_down(self, touch):
         tx, ty = touch.pos
         if tx  <= self.x+self.width and ty <= self.y+self.height and tx >= self.x and ty >= self.y:
-            self.spawnlazer = True
+            self.spawn_lazer()
+            Clock.schedule_interval(self.spawn_lazer, self.player.firerate)
             
     def on_touch_up(self, touch):
-        self.spawnlazer = False
+        Clock.unschedule(self.spawn_lazer, all=True)
         
+    def spawn_lazer(self, *ignore):
+        new_projectile = PlayerLazer(self.parent.scale, self.parent.player)
+        self.parent.add_widget(new_projectile)
+        self.parent.projectileList.append(new_projectile)
+    
     def update(self):
-        if self.spawnlazer == True:
-            new_projectile = PlayerLazer(self.parent.scale, self.parent.player)
-            self.parent.add_widget(new_projectile)
-            self.parent.projectileList.append(new_projectile)
+        pass
         
 class DPad(Widget):
     def __init__(self, scale, player, **kwargs):
@@ -177,7 +182,7 @@ class Game(Widget):
         self.dpad = DPad ( self.scale, self.player, pos=self.background.pos )
         self.add_widget( self.dpad )
         
-        self.lazerbutton = LazerButton ( self.scale, self.background)
+        self.lazerbutton = LazerButton ( self.scale, self.background, self.player )
         self.add_widget ( self.lazerbutton )
         
         Clock.schedule_interval(self.update, 1.0/60.0)
