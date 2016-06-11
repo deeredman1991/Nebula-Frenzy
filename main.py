@@ -102,6 +102,8 @@ class DPad(Widget):
     def __init__(self, scale, player, **kwargs):
         super(DPad, self).__init__(**kwargs)
         
+        Window.bind(on_joy_axis=self._on_joy_axis)
+        
         self.image = Sprite(scale*1.5, source = 'images/DPad.png')
         self.add_widget(self.image)
         
@@ -111,6 +113,16 @@ class DPad(Widget):
         
         self.deadzone = 0.15
         
+    def _on_joy_axis(self, window, stickid, axisid, value):
+        if value > 1600 or value < -1600:
+            print('StickID: {} | AxisID: {} | Value: {}'.format(stickid, axisid, value))
+    
+    '''
+    def _joystick_closed(self):
+        self._joystick.unbind(on_joy_axis=self._on_joy_axis)
+        self._joystick = None
+    '''
+    
     def touch_handler(self, touch):
         tx, ty = touch.pos
         if tx  < self.width and ty < self.height:
