@@ -64,6 +64,9 @@ class LazerButton(Widget):
     def __init__(self, scale, background, player, **kwargs):
         super(LazerButton, self).__init__(**kwargs)
         
+        Window.bind(on_joy_button_down=self._on_joy_button_down)
+        Window.bind(on_joy_button_up=self._on_joy_button_up)
+        
         self.image = Sprite(scale*1.5, source = 'images/LazerButton.png')
         
         self.size = self.image.size
@@ -80,6 +83,14 @@ class LazerButton(Widget):
             Color(0.5,1,1,1)
             Rectangle(pos = self.pos, size = self.size)
         #'''
+        
+    def _on_joy_button_down(self, window, stickid, buttonid):
+        if buttonid == 0:
+            self.spawn_lazer()
+            Clock.schedule_interval(self.spawn_lazer, self.player.firerate)
+        
+    def _on_joy_button_up(self, window, stickid, buttonid):
+        Clock.unschedule(self.spawn_lazer, all=True)
     
     def on_touch_down(self, touch):
         tx, ty = touch.pos
@@ -122,8 +133,6 @@ class DPad(Widget):
     '''
             
     def _on_joy_hat(self, window, stickid, hatid, value):
-        print('StickID: {} | HatID: {} | Value: {}'.format(stickid, hatid, value))
-        
         vx, vy = value
         self.player.velocity_x = self.player.speed*vx
         self.player.velocity_y = self.player.speed*vy
