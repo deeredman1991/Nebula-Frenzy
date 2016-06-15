@@ -17,11 +17,32 @@ class Sprite(Image):
         w, h = self.texture_size
         self.size = (scale * w, scale * h)
         
+class Asteroid(Sprite):
+    def __init__(self, scale, background=None, **kwargs):
+        super(Asteroid, self).__init__( scale*0.75, center=(background.width/2, background.height), source='images/Asteroid1.png')
+        
+        self.speed = 3
+        self.velocity_x = 0
+        self.velocity_y = self.speed
+        
+        self.collision = False
+        
+    def update(self):
+        self.x -= self.velocity_x
+        self.y -= self.velocity_y
+        
+        if self.y < -self.height:
+            self.collision = True
+            
+        if self.collision == True:
+            self.parent.enemyList.remove(self)
+            self.parent.remove_widget(self)
+            
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
         super(PlayerShip, self).__init__( scale*0.75, center=(background.width/2, background.height/2), source='images/PlayerShip1.png')
         
-        self.background = background
+        #self.background = background
         
         self.speed = 5
         self.velocity_x = 0
@@ -34,12 +55,12 @@ class PlayerShip(Sprite):
         self.y += self.velocity_y
         if self.x < 0:
             self.x = 0
-        elif self.x > self.background.width-self.width:
-            self.x = self.background.width-self.width
+        elif self.x > self.parent.background.width-self.width:
+            self.x = self.parent.background.width-self.width
         if self.y < 0:
             self.y = 0
-        elif self.y > self.background.height-self.height:
-            self.y = self.background.height-self.height
+        elif self.y > self.parent.background.height-self.height:
+            self.y = self.parent.background.height-self.height
             
 class PlayerLazer(Sprite):
     def __init__(self, scale, player=None, **kwargs):
@@ -50,6 +71,7 @@ class PlayerLazer(Sprite):
         self.collision = False
         
         self.speed = 6
+        
     def update(self):
         self.y += self.speed
         
@@ -206,6 +228,11 @@ class Game(Widget):
         
         self.projectileList = []
         
+        self.asteroidtest = Asteroid( self.scale, background=self.background )
+        self.add_widget(self.asteroidtest)
+        
+        self.enemyList = [self.asteroidtest]
+        
         self.dpad = DPad ( self.scale, self.player, pos=self.background.pos )
         self.add_widget( self.dpad )
         
@@ -221,6 +248,9 @@ class Game(Widget):
         
         for projectile in self.projectileList:
             projectile.update()
+            
+        for enemy in self.enemyList:
+            enemy.update()
 
 class GameApp(App):
     def build(self):
