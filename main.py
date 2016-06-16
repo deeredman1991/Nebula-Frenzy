@@ -19,7 +19,7 @@ class Sprite(Image):
         
 class Asteroid(Sprite):
     def __init__(self, scale, background=None, **kwargs):
-        super(Asteroid, self).__init__( scale*0.75, center=(background.width/2, background.height), source='images/Asteroid1.png')
+        super(Asteroid, self).__init__( scale*0.75,pos=(random.randint(0, background.width-self.width), background.height), source='images/Asteroid1.png')
         
         self.speed = 3
         self.velocity_x = 0
@@ -37,7 +37,13 @@ class Asteroid(Sprite):
         if self.collision == True:
             self.parent.enemyList.remove(self)
             self.parent.remove_widget(self)
-            
+    
+class AsteroidSpawner(Widget):
+    def spawn_asteroid(self, *ignore):
+        new_asteroid = Asteroid( self.parent.scale, self.parent.background )
+        self.parent.add_widget(new_asteroid)
+        self.parent.enemyList.append(new_asteroid)
+    
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
         super(PlayerShip, self).__init__( scale*0.75, center=(background.width/2, background.height/2), source='images/PlayerShip1.png')
@@ -61,7 +67,7 @@ class PlayerShip(Sprite):
             self.y = 0
         elif self.y > self.parent.background.height-self.height:
             self.y = self.parent.background.height-self.height
-            
+    
 class PlayerLazer(Sprite):
     def __init__(self, scale, player=None, **kwargs):
         super(PlayerLazer, self).__init__( scale, pos=player.pos, source='images/BlueLazer.png')
@@ -228,10 +234,13 @@ class Game(Widget):
         
         self.projectileList = []
         
-        self.asteroidtest = Asteroid( self.scale, background=self.background )
-        self.add_widget(self.asteroidtest)
+        #self.asteroidtest = Asteroid( self.scale, background=self.background )
+        #self.add_widget(self.asteroidtest)
         
-        self.enemyList = [self.asteroidtest]
+        self.asteroidSpawner = AsteroidSpawner()
+        self.add_widget(self.asteroidSpawner)
+        
+        self.enemyList = []
         
         self.dpad = DPad ( self.scale, self.player, pos=self.background.pos )
         self.add_widget( self.dpad )
@@ -240,6 +249,7 @@ class Game(Widget):
         self.add_widget ( self.lazerbutton )
         
         Clock.schedule_interval(self.update, 1.0/60.0)
+        Clock.schedule_interval(self.asteroidSpawner.spawn_asteroid, 1.0/10)
         
     def update(self, dt):
         self.background.update()
