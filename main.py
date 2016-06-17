@@ -4,7 +4,9 @@ from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.clock import Clock
 
-from kivy.graphics import Color, Rectangle
+from kivy.graphics import Color, Rectangle, Rotate
+from kivy.graphics.context_instructions import PushMatrix, PopMatrix#, Rotate
+
 
 import random
 
@@ -19,9 +21,20 @@ class Sprite(Image):
         
 class Asteroid(Sprite):
     def __init__(self, scale, background=None, **kwargs):
-        super(Asteroid, self).__init__( scale*0.75,pos=(random.randint(0, background.width-self.width), background.height), source='images/Asteroid1.png')
+        super(Asteroid, self).__init__(scale*0.75, source='images/Asteroid{}.png'.format(random.randint(1,2)), **kwargs)
         
-        self.speed = 3
+        self.pos = (random.randint(0, int(background.width-self.width)), int(background.height))
+        
+        with self.canvas.before:
+            PushMatrix()
+            self.rot = Rotate()
+            
+        with self.canvas.after:
+            PopMatrix()
+        
+        
+        self.rot_velocity = random.randrange(-3, 3)
+        self.speed = random.randint(2, 5)
         self.velocity_x = 0
         self.velocity_y = self.speed
         
@@ -30,6 +43,20 @@ class Asteroid(Sprite):
     def update(self):
         self.x -= self.velocity_x
         self.y -= self.velocity_y
+        
+        self.rot.origin = self.center
+        self.rot.angle += self.rot_velocity
+        
+        '''
+        with self.texture.canvas.before:
+            Color(0.5,1,1,1)
+            Rectangle(pos = self.pos, size = self.size)
+            Rotate(angle = 45, origin=self.center)
+        '''
+        
+        #'''
+        
+        #'''
         
         if self.y < -self.height:
             self.collision = True
@@ -249,7 +276,7 @@ class Game(Widget):
         self.add_widget ( self.lazerbutton )
         
         Clock.schedule_interval(self.update, 1.0/60.0)
-        Clock.schedule_interval(self.asteroidSpawner.spawn_asteroid, 1.0/10)
+        Clock.schedule_interval(self.asteroidSpawner.spawn_asteroid, 1.0/5)
         
     def update(self, dt):
         self.background.update()
@@ -264,7 +291,7 @@ class Game(Widget):
 
 class GameApp(App):
     def build(self):
-        Window.size = (random.randint(200, 1000), random.randint(200, 1000))
+        Window.size = (random.randint(500, 1000), random.randint(500, 1000))
         #Window.size = (300, 500)
         self.title = 'Nebula Frenzy'
         #self.icon = 'images/icon.png'
