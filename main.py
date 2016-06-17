@@ -209,12 +209,12 @@ class Background(Widget):
         
         self.image = Image(allow_stretch=True, keep_ratio = False, source=source)
         self.image.size = Window.size
-        self.image.height = self.image.width*4
+        self.image.height = int(self.image.width*4)
         self.add_widget(self.image)
         
         self.image_dupe = Image(allow_stretch=True, keep_ratio = False, source=source)
         self.image_dupe.size = Window.size
-        self.image_dupe.height = self.image_dupe.width*4
+        self.image_dupe.height = int(self.image_dupe.width*4)
         self.image_dupe.y = self.image.height-1
         self.add_widget(self.image_dupe)
         
