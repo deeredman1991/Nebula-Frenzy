@@ -21,7 +21,7 @@ class Sprite(Image):
         
 class Asteroid(Sprite):
     def __init__(self, scale, background=None, **kwargs):
-        super(Asteroid, self).__init__(scale*0.75, source='images/Asteroid{}.png'.format(random.randint(1,2)), **kwargs)
+        super(Asteroid, self).__init__(scale*random.uniform(0.5, 1), source='images/Asteroid{}.png'.format(random.randint(1,2)), **kwargs)
         
         self.pos = (random.randint(0, int(background.width-self.width)), int(background.height))
         
@@ -32,10 +32,9 @@ class Asteroid(Sprite):
         with self.canvas.after:
             PopMatrix()
         
-        
-        self.rot_velocity = random.randrange(-3, 3)
-        self.speed = random.randint(2, 5)
-        self.velocity_x = 0
+        self.rot_velocity = random.randrange(-4, 4)
+        self.speed = random.uniform(3, 5)
+        self.velocity_x = random.uniform(-self.speed*0.1, self.speed*0.1)
         self.velocity_y = self.speed
         
         self.collision = False
@@ -46,17 +45,6 @@ class Asteroid(Sprite):
         
         self.rot.origin = self.center
         self.rot.angle += self.rot_velocity
-        
-        '''
-        with self.texture.canvas.before:
-            Color(0.5,1,1,1)
-            Rectangle(pos = self.pos, size = self.size)
-            Rotate(angle = 45, origin=self.center)
-        '''
-        
-        #'''
-        
-        #'''
         
         if self.y < -self.height:
             self.collision = True
@@ -74,8 +62,6 @@ class AsteroidSpawner(Widget):
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
         super(PlayerShip, self).__init__( scale*0.75, center=(background.width/2, background.height/2), source='images/PlayerShip1.png')
-        
-        #self.background = background
         
         self.speed = 5
         self.velocity_x = 0
@@ -276,7 +262,7 @@ class Game(Widget):
         self.add_widget ( self.lazerbutton )
         
         Clock.schedule_interval(self.update, 1.0/60.0)
-        Clock.schedule_interval(self.asteroidSpawner.spawn_asteroid, 1.0/5)
+        Clock.schedule_interval(self.asteroidSpawner.spawn_asteroid, 1.0/10)
         
     def update(self, dt):
         self.background.update()
