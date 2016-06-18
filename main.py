@@ -21,7 +21,7 @@ class Sprite(Image):
         
 class Asteroid(Sprite):
     def __init__(self, scale, background=None, **kwargs):
-        super(Asteroid, self).__init__(scale*random.uniform(0.5, 1), source='images/Asteroid{}.png'.format(random.randint(1,2)), **kwargs)
+        super(Asteroid, self).__init__(scale*random.uniform(0.5, 1), source='images/Asteroid{}.png'.format(random.randint(1,3)), **kwargs)
         
         self.pos = (random.randint(0, int(background.width-self.width)), int(background.height))
         
@@ -210,21 +210,25 @@ class Background(Widget):
         self.image = Image(allow_stretch=True, keep_ratio = False, source=source)
         self.image.size = Window.size
         self.image.height = int(self.image.width*4)
+        self.image.width = self.image.width+4
+        self.image.x = -2
         self.add_widget(self.image)
         
         self.image_dupe = Image(allow_stretch=True, keep_ratio = False, source=source)
         self.image_dupe.size = Window.size
         self.image_dupe.height = int(self.image_dupe.width*4)
-        self.image_dupe.y = self.image.height-1
+        self.image_dupe.width = self.image_dupe.width+4
+        self.image_dupe.x = -2
+        self.image_dupe.y = self.image.height-2
         self.add_widget(self.image_dupe)
         
     def update(self):
-        self.image.y -= 1 * self.parent.scale
-        self.image_dupe.y -= 1 * self.parent.scale
+        self.image.y -= 4 * self.parent.scale
+        self.image_dupe.y -= 4 * self.parent.scale
         
         if self.image.top <= 0:
             self.image.y = 0
-            self.image_dupe.y = self.image.height-1
+            self.image_dupe.y = self.image.height-2
     
 class Game(Widget):
     def __init__(self):
