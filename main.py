@@ -87,6 +87,7 @@ class PlayerLazer(Sprite):
         self.y += player.height
         self.x = player.x + player.width*0.15
         
+        self.destroy = False
         self.collision = False
         
         self.speed = 6
@@ -95,10 +96,18 @@ class PlayerLazer(Sprite):
         self.y += self.speed
         
         if self.y >= self.parent.background.height:
-            self.collision = True
+            self.destroy = True
         
-        if self.collision == True:
+        for enemy in self.parent.enemyList:
+            if  self.x >= enemy.x-10 and self.right <= enemy.right+10 and self.y >= enemy.y-10 and self.top <= enemy.top+10:
+                self.collision = True
+                enemy.collision = True
+        
+        if self.collision == True or self.destroy:
             self.parent.projectileList.remove(self)
+            if self.collision:
+                #Play Animation
+                pass
             self.parent.remove_widget(self)
         
 class LazerButton(Widget):
