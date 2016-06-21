@@ -21,7 +21,7 @@ class Sprite(Image):
         
 class Asteroid(Sprite):
     def __init__(self, scale, background=None, **kwargs):
-        super(Asteroid, self).__init__(scale*random.uniform(0.75, 1), source='images/Asteroid{}.png'.format(random.randint(1,4)), **kwargs)
+        super(Asteroid, self).__init__(scale*random.uniform(0.75, 1), source='images/Asteroid{}.png'.format(random.randint(1,5)), **kwargs)
         
         self.pos = (random.randint(0, int(background.width-self.width)), int(background.height))
         
