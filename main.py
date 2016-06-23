@@ -67,7 +67,9 @@ class PlayerShip(Sprite):
         self.velocity_x = 0
         self.velocity_y = 0
         
-        self.firerate = 0.1
+        self.firerate = 0.2
+        self.lazercooldown = 1
+        self.max_shots = 3
         
     def update(self):
         self.x += self.velocity_x
@@ -128,11 +130,16 @@ class LazerButton(Widget):
         
         self.player = player
         
+        self.lazercount = 0
+        
         '''
         with self.canvas:
             Color(0.5,1,1,1)
             Rectangle(pos = self.pos, size = self.size)
         #'''
+        
+    def _reset_lazer_count(self, *ignore):
+        self.lazercount = 0
         
     def _on_joy_button_down(self, window, stickid, buttonid):
         if buttonid == 0:
@@ -152,10 +159,14 @@ class LazerButton(Widget):
         Clock.unschedule(self.spawn_lazer, all=True)
         
     def spawn_lazer(self, *ignore):
-        new_projectile = PlayerLazer(self.parent.scale, self.parent.player)
-        self.parent.add_widget(new_projectile)
-        self.parent.projectileList.append(new_projectile)
-    
+        if self.lazercount == 0:
+            Clock.schedule_once(self._reset_lazer_count, self.parent.player.lazercooldown)
+        if self.lazercount < self.parent.player.max_shots:
+            self.lazercount += 1
+            new_projectile = PlayerLazer(self.parent.scale, self.parent.player)
+            self.parent.add_widget(new_projectile)
+            self.parent.projectileList.append(new_projectile)
+            
     def update(self):
         pass
         
