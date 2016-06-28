@@ -7,10 +7,21 @@ from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle, Rotate
 from kivy.graphics.context_instructions import PushMatrix, PopMatrix#, Rotate
 
+from kivy.core.audio import SoundLoader
 
 import random
 
-
+class MultiSound(object): # for playing the same sound multiple times.
+    def __init__(self, file, num):
+        self.num = num
+        self.sounds = [SoundLoader.load(file) for n in range(num)]
+        self.index = 0
+        
+    def play(self):
+        self.sounds[self.index].play()
+        self.index += 1
+        if self.index == self.num:
+            self.index = 0
 
 class Sprite(Image):
     def __init__(self, scale, **kwargs):
@@ -163,6 +174,7 @@ class LazerButton(Widget):
             Clock.schedule_once(self._reset_lazer_count, self.parent.player.lazercooldown)
         if self.lazercount < self.parent.player.max_shots:
             self.lazercount += 1
+            self.parent.lazersound.play()
             new_projectile = PlayerLazer(self.parent.scale, self.parent.player)
             self.parent.add_widget(new_projectile)
             self.parent.projectileList.append(new_projectile)
@@ -281,6 +293,8 @@ class Game(Widget):
         
         self.dpad = DPad ( self.scale, self.player, pos=self.background.pos )
         self.add_widget( self.dpad )
+        
+        self.lazersound = MultiSound('audio/lazer.wav', 3)
         
         self.lazerbutton = LazerButton ( self.scale, self.background, self.player )
         self.add_widget ( self.lazerbutton )

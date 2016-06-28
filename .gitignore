@@ -3,5 +3,6 @@
 *.pyc
 
 images/Resources/*
+audio/Resources/*
 
 test.py
