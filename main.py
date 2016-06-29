@@ -63,12 +63,16 @@ class Asteroid(Sprite):
         if self.collision == True:
             self.parent.enemyList.remove(self)
             self.parent.remove_widget(self)
-    
+            
 class AsteroidSpawner(Widget):
     def spawn_asteroid(self, *ignore):
         new_asteroid = Asteroid( self.parent.scale, self.parent.background )
         self.parent.add_widget(new_asteroid)
         self.parent.enemyList.append(new_asteroid)
+    
+class Powerup(Sprite):
+    def __init__(self, scale, pos=None, **kwargs):
+        super(Powerup, self).__init__(scale*0.25, pos=pos, source='images/Powerup{}.png'.format(random.randint(1,2)), **kwargs)
     
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
@@ -232,7 +236,7 @@ class DPad(Widget):
     def on_touch_up(self, *ignore):
         self.player.velocity_x = 0
         self.player.velocity_y = 0
-        
+            
 class Background(Widget):
     def __init__(self, source):
         super(Background, self).__init__()
@@ -298,6 +302,9 @@ class Game(Widget):
         
         self.lazerbutton = LazerButton ( self.scale, self.background, self.player )
         self.add_widget ( self.lazerbutton )
+        
+        self.poweruptest = Powerup (self.scale, (self.background.width/2, self.background.height/2) )
+        self.add_widget (self.poweruptest)
         
         Clock.schedule_interval(self.update, 1.0/60.0)
         Clock.schedule_interval(self.asteroidSpawner.spawn_asteroid, 1.0/10)
