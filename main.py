@@ -72,7 +72,7 @@ class AsteroidSpawner(Widget):
     
 class Powerup(Sprite):
     def __init__(self, scale, pos=None, **kwargs):
-        super(Powerup, self).__init__(scale*0.75, pos=pos, source='images/Powerup{}.png'.format(random.randint(1,2)), **kwargs)
+        super(Powerup, self).__init__(scale*0.75, pos=pos, source='images/Powerup{}-1.png'.format(random.randint(1,2)), **kwargs)
     
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
