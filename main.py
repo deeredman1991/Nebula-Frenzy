@@ -72,7 +72,21 @@ class AsteroidSpawner(Widget):
     
 class Powerup(Sprite):
     def __init__(self, scale, pos=None, **kwargs):
-        super(Powerup, self).__init__(scale*0.75, pos=pos, source='images/Powerup{}-1.png'.format(random.randint(1,2)), **kwargs)
+        self.powerupID = random.randint(1,2)
+        super(Powerup, self).__init__(scale*0.75, pos=pos, source='images/Powerup{}-1.png'.format(self.powerupID), **kwargs)
+        
+        self.animframe = 1
+        
+        Clock.schedule_interval(self.animate, 1.0/10.0)
+        
+    def animate(self, *ignore):
+        self.animframe += 1
+        if self.animframe >= 4:
+            self.animframe = 1
+        self.source = 'images/Powerup{}-{}.png'.format(self.powerupID,self.animframe)
+    
+    def update(self):
+        pass
     
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
@@ -306,6 +320,8 @@ class Game(Widget):
         self.poweruptest = Powerup (self.scale, (self.background.width/2, self.background.height/2) )
         self.add_widget (self.poweruptest)
         
+        self.powerupList = [self.poweruptest]
+        
         Clock.schedule_interval(self.update, 1.0/60.0)
         Clock.schedule_interval(self.asteroidSpawner.spawn_asteroid, 1.0/10)
         
@@ -319,6 +335,9 @@ class Game(Widget):
             
         for enemy in self.enemyList:
             enemy.update()
+            
+        for powerup in self.powerupList:
+            powerup.update()
 
 class GameApp(App):
     def build(self):
