@@ -72,21 +72,39 @@ class AsteroidSpawner(Widget):
     
 class Powerup(Sprite):
     def __init__(self, scale, pos=None, **kwargs):
-        self.powerupID = random.randint(1,2)
+        self.powerupID = 1#random.randint(1,2)
         super(Powerup, self).__init__(scale*0.75, pos=pos, source='images/Powerup{}-1.png'.format(self.powerupID), **kwargs)
         
         self.animframe = 1
+        self.framecount = 1
         
-        Clock.schedule_interval(self.animate, 1.0/10.0)
+        #Consider seperating ball from ring and adding rotation to the ring.
+        '''
+        with self.canvas.before:
+            PushMatrix()
+            self.rot = Rotate()
+            
+        with self.canvas.after:
+            PopMatrix()
         
-    def animate(self, *ignore):
+        self.rot_velocity = random.randrange(-4, 4)
+        '''
+        
+    def animate(self):
         self.animframe += 1
-        if self.animframe >= 4:
+        if self.animframe > 4:
             self.animframe = 1
         self.source = 'images/Powerup{}-{}.png'.format(self.powerupID,self.animframe)
     
     def update(self):
-        pass
+        '''
+        self.rot.origin = self.center
+        self.rot.angle += self.rot_velocity
+        '''
+        self.framecount += 1
+        if self.framecount == 10:
+            self.framecount = 1
+            self.animate()
     
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
