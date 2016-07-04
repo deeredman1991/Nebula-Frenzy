@@ -72,11 +72,18 @@ class AsteroidSpawner(Widget):
     
 class Powerup(Sprite):
     def __init__(self, scale, pos=None, **kwargs):
-        self.powerupID = 1#random.randint(1,2)
-        super(Powerup, self).__init__(scale*0.75, pos=pos, source='images/Powerup{}-1.png'.format(self.powerupID), **kwargs)
         
+        if random.randint(1,100) < 5:
+            self.omnipowerup = True
+        else:
+            self.omnipowerup =False
         self.animframe = 1
         self.framecount = 1
+        self.totalPowerupTypes = 5
+        
+    
+        self.powerupID = random.randint(1,self.totalPowerupTypes)
+        super(Powerup, self).__init__(scale*0.75, pos=pos, source='images/Powerup{}-1.png'.format(self.powerupID), **kwargs)
         
         #Consider seperating ball from ring and adding rotation to the ring.
         '''
@@ -94,6 +101,8 @@ class Powerup(Sprite):
         self.animframe += 1
         if self.animframe > 4:
             self.animframe = 1
+        if self.omnipowerup == True:
+            self.powerupID = random.randint(1,self.totalPowerupTypes)
         self.source = 'images/Powerup{}-{}.png'.format(self.powerupID,self.animframe)
     
     def update(self):
