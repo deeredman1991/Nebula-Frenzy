@@ -64,38 +64,32 @@ class Asteroid(Sprite):
             self.parent.enemyList.remove(self)
             self.parent.remove_widget(self)
             
-class AsteroidSpawner(Widget):
-    def spawn_asteroid(self, *ignore):
-        new_asteroid = Asteroid( self.parent.scale, self.parent.background )
-        self.parent.add_widget(new_asteroid)
-        self.parent.enemyList.append(new_asteroid)
-    
 class Powerup(Sprite):
-    def __init__(self, scale, pos=None, **kwargs):
+    def __init__(self, scale, background=None, **kwargs):
         
         if random.randint(1,100) < 5:
             self.omnipowerup = True
         else:
-            self.omnipowerup =False
+            self.omnipowerup = False
+            
+        if self.omnipowerup == True:
+            self.animspeed = 10
+        else:
+            self.animspeed = random.randint(5,15)
         self.animframe = 1
         self.framecount = 1
         self.totalPowerupTypes = 5
         
-    
         self.powerupID = random.randint(1,self.totalPowerupTypes)
-        super(Powerup, self).__init__(scale*0.75, pos=pos, source='images/Powerup{}-1.png'.format(self.powerupID), **kwargs)
+        super(Powerup, self).__init__(scale*0.75, source='images/Powerup{}-1.png'.format(self.powerupID), **kwargs)
         
-        #Consider seperating ball from ring and adding rotation to the ring.
-        '''
-        with self.canvas.before:
-            PushMatrix()
-            self.rot = Rotate()
-            
-        with self.canvas.after:
-            PopMatrix()
+        self.pos = (random.randint(0, int(background.width-self.width)), int(background.height))
         
-        self.rot_velocity = random.randrange(-4, 4)
-        '''
+        self.speed = random.uniform(3, 5)
+        self.velocity_x = random.uniform(-self.speed*0.1, self.speed*0.1)
+        self.velocity_y = self.speed
+        
+        self.collision = False
         
     def animate(self):
         self.animframe += 1
@@ -106,14 +100,48 @@ class Powerup(Sprite):
         self.source = 'images/Powerup{}-{}.png'.format(self.powerupID,self.animframe)
     
     def update(self):
-        '''
-        self.rot.origin = self.center
-        self.rot.angle += self.rot_velocity
-        '''
+        self.x -= self.velocity_x
+        self.y -= self.velocity_y
+    
         self.framecount += 1
-        if self.framecount == 10:
+        if self.framecount == self.animspeed:
             self.framecount = 1
             self.animate()
+            
+        if self.y < -self.height:
+            self.collision = True
+            
+        if self.collision == True:
+            self.parent.powerupList.remove(self)
+            self.parent.remove_widget(self)
+    
+class Spawner(Widget):
+    def __init__(self, **kwargs):
+        super(Spawner, self).__init__(**kwargs)
+        self.frame_count = 1
+    
+    def spawn_asteroid(self):
+        new_asteroid = Asteroid( self.parent.scale, self.parent.background )
+        self.parent.add_widget(new_asteroid)
+        self.parent.enemyList.append(new_asteroid)
+        
+    def spawn_powerup(self):
+        new_powerup = Powerup (self.parent.scale, self.parent.background)
+        self.parent.add_widget(new_powerup)
+        self.parent.powerupList.append(new_powerup)
+        
+    def update(self):
+        if self.frame_count % 5 == 0:
+            self.spawn_asteroid()
+            
+        if self.frame_count % 100 == 0:
+            if random.randint(1,100) < 20:
+                self.spawn_powerup()
+            
+        self.frame_count += 1
+        if self.frame_count > 1000:
+            self.frame_count = 1
+        
     
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
@@ -331,8 +359,8 @@ class Game(Widget):
         #self.asteroidtest = Asteroid( self.scale, background=self.background )
         #self.add_widget(self.asteroidtest)
         
-        self.asteroidSpawner = AsteroidSpawner()
-        self.add_widget(self.asteroidSpawner)
+        #self.asteroidSpawner = AsteroidSpawner()
+        #self.add_widget(self.asteroidSpawner)
         
         self.enemyList = []
         
@@ -344,13 +372,13 @@ class Game(Widget):
         self.lazerbutton = LazerButton ( self.scale, self.background, self.player )
         self.add_widget ( self.lazerbutton )
         
-        self.poweruptest = Powerup (self.scale, (self.background.width/2, self.background.height/2) )
-        self.add_widget (self.poweruptest)
+        self.powerupList = []
         
-        self.powerupList = [self.poweruptest]
+        self.spawner = Spawner()
+        self.add_widget(self.spawner)
         
         Clock.schedule_interval(self.update, 1.0/60.0)
-        Clock.schedule_interval(self.asteroidSpawner.spawn_asteroid, 1.0/10)
+        #Clock.schedule_interval(self.asteroidSpawner.spawn_asteroid, 1.0/10)
         
     def update(self, dt):
         self.background.update()
@@ -365,6 +393,8 @@ class Game(Widget):
             
         for powerup in self.powerupList:
             powerup.update()
+            
+        self.spawner.update()
 
 class GameApp(App):
     def build(self):
