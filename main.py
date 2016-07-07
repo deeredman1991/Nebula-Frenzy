@@ -48,6 +48,8 @@ class Asteroid(Sprite):
         self.velocity_x = random.uniform(-self.speed*0.1, self.speed*0.1)
         self.velocity_y = self.speed
         
+        self.score_value = 10
+        
         self.collision = False
         
     def update(self):
@@ -63,6 +65,10 @@ class Asteroid(Sprite):
         if self.collision == True:
             self.parent.enemyList.remove(self)
             self.parent.remove_widget(self)
+            
+    def on_killed(self):
+        self.parent.player.score += self.score_value
+        print(self.parent.player.score)
             
 class Powerup(Sprite):
     def __init__(self, scale, background=None, **kwargs):
@@ -142,7 +148,6 @@ class Spawner(Widget):
         if self.frame_count > 1000:
             self.frame_count = 1
         
-    
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
         super(PlayerShip, self).__init__( scale*0.75, center=(background.width/2, background.height/2), source='images/PlayerShip1.png')
@@ -154,6 +159,8 @@ class PlayerShip(Sprite):
         self.firerate = 0.2
         self.lazercooldown = 1
         self.max_shots = 3
+        
+        self.score = 0
         
     def update(self):
         self.x += self.velocity_x
@@ -187,6 +194,7 @@ class PlayerLazer(Sprite):
         for enemy in self.parent.enemyList:
             if  self.x >= enemy.x-10 and self.right <= enemy.right+10 and self.y >= enemy.y-10 and self.top <= enemy.top+10:
                 self.collision = True
+                enemy.on_killed()
                 enemy.collision = True
         
         if self.collision == True or self.destroy:
