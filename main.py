@@ -124,7 +124,6 @@ class Powerup(Sprite):
 class Spawner(Widget):
     def __init__(self, **kwargs):
         super(Spawner, self).__init__(**kwargs)
-        self.frame_count = 1
     
     def spawn_asteroid(self):
         new_asteroid = Asteroid( self.parent.scale, self.parent.background )
@@ -137,16 +136,11 @@ class Spawner(Widget):
         self.parent.powerupList.append(new_powerup)
         
     def update(self):
-        if self.frame_count % 5 == 0:
+        if random.uniform(0, 100) <= 10:
             self.spawn_asteroid()
             
-        if self.frame_count % 100 == 0:
-            if random.randint(1,100) < 20:
-                self.spawn_powerup()
-            
-        self.frame_count += 1
-        if self.frame_count > 1000:
-            self.frame_count = 1
+        if random.uniform(0, 100) <= 0.1:
+            self.spawn_powerup()
         
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
