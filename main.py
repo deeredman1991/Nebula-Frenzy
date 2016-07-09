@@ -82,6 +82,7 @@ class Powerup(Sprite):
             self.animspeed = 10
         else:
             self.animspeed = random.randint(5,15)
+            
         self.animframe = 1
         self.framecount = 1
         self.totalPowerupTypes = 5
@@ -117,6 +118,11 @@ class Powerup(Sprite):
         if self.y < -self.height:
             self.collision = True
             
+        player = self.parent.player
+        if self.x >= player.x-10 and self.right <= player.right+10 and self.y >= player.y-10 and self.top <= player.top+10:
+            self.collision = True
+            player.active_powerups[self.powerupID] = ActivePowerup(self.powerupID)
+            
         if self.collision == True:
             self.parent.powerupList.remove(self)
             self.parent.remove_widget(self)
@@ -141,6 +147,15 @@ class Spawner(Widget):
             
         if random.uniform(0, 100) <= 0.1:
             self.spawn_powerup()
+            
+class ActivePowerup(object):
+    def __init__(self, powerupID, health=10):
+        self.powerupID = powerupID
+        self.health = health
+        
+    def update(self):
+        print("bwahahaha!!!")
+        self.health -= 1
         
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
@@ -156,6 +171,8 @@ class PlayerShip(Sprite):
         
         self.score = 0
         
+        self.active_powerups = {}
+        
     def update(self):
         self.x += self.velocity_x
         self.y += self.velocity_y
@@ -167,6 +184,11 @@ class PlayerShip(Sprite):
             self.y = 0
         elif self.y > self.parent.background.height-self.height:
             self.y = self.parent.background.height-self.height
+            
+        for k, v in self.active_powerups.copy().iteritems():
+            v.update()
+            if v.health == 0:
+                del self.active_powerups[k]
     
 class PlayerLazer(Sprite):
     def __init__(self, scale, player=None, **kwargs):
@@ -186,7 +208,7 @@ class PlayerLazer(Sprite):
             self.destroy = True
         
         for enemy in self.parent.enemyList:
-            if  self.x >= enemy.x-10 and self.right <= enemy.right+10 and self.y >= enemy.y-10 and self.top <= enemy.top+10:
+            if self.x >= enemy.x-10 and self.right <= enemy.right+10 and self.y >= enemy.y-10 and self.top <= enemy.top+10:
                 self.collision = True
                 enemy.on_killed()
                 enemy.collision = True
