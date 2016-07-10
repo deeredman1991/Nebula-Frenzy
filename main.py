@@ -121,7 +121,7 @@ class Powerup(Sprite):
         player = self.parent.player
         if self.x >= player.x-10 and self.right <= player.right+10 and self.y >= player.y-10 and self.top <= player.top+10:
             self.collision = True
-            player.active_powerups[self.powerupID] = ActivePowerup(self.powerupID)
+            player.active_powerups[self.powerupID] = ActivePowerup(self.powerupID, self.parent.player)
             
         if self.collision == True:
             self.parent.powerupList.remove(self)
@@ -130,6 +130,7 @@ class Powerup(Sprite):
 class Spawner(Widget):
     def __init__(self, **kwargs):
         super(Spawner, self).__init__(**kwargs)
+        self.debug = True
     
     def spawn_asteroid(self):
         new_asteroid = Asteroid( self.parent.scale, self.parent.background )
@@ -142,6 +143,9 @@ class Spawner(Widget):
         self.parent.powerupList.append(new_powerup)
         
     def update(self):
+        if self.debug and random.uniform(0, 100) <= 10:
+            self.spawn_powerup()
+            
         if random.uniform(0, 100) <= 10:
             self.spawn_asteroid()
             
@@ -149,14 +153,44 @@ class Spawner(Widget):
             self.spawn_powerup()
             
 class ActivePowerup(object):
-    def __init__(self, powerupID, health=10):
+    def __init__(self, powerupID, player, timer=1):
+        self.player = player
         self.powerupID = powerupID
-        self.health = health
+        self.timer = timer
+        
+        self.tripped = False
         
     def update(self):
-        print("bwahahaha!!!")
-        self.health -= 1
+        #Activate Powerups
+        if self.powerupID == 1 and self.tripped == False: #Green
+            self.player.max_shots = 1000
+            self.player.firerate = 8
+            self.timer = 480
+            self.tripped = True
+        elif self.powerupID == 2: #Red
+            print("Powerup ID {} not implimented.".format(self.powerupID))
+        elif self.powerupID == 3: #Blue
+            print("Powerup ID {} not implimented.".format(self.powerupID))
+        elif self.powerupID == 4: #Yellow
+            print("Powerup ID {} not implimented.".format(self.powerupID))
+        elif self.powerupID == 5: #Purple
+            print("Powerup ID {} not implimented.".format(self.powerupID))
+        self.timer -= 1
         
+        #Deactivate Powerups
+        if self.timer <= 0:
+            if self.powerupID == 1:
+                self.player.max_shots = 3
+                self.player.firerate = 10
+            elif self.powerupID == 2:
+                pass
+            elif self.powerupID == 3:
+                pass
+            elif self.powerupID == 4:
+                pass
+            elif self.powerupID == 5:
+                pass
+                
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
         super(PlayerShip, self).__init__( scale*0.75, center=(background.width/2, background.height/2), source='images/PlayerShip1.png')
@@ -165,7 +199,7 @@ class PlayerShip(Sprite):
         self.velocity_x = 0
         self.velocity_y = 0
         
-        self.firerate = 0.2
+        self.firerate = 10 #less is faster
         self.lazercooldown = 1
         self.max_shots = 3
         
@@ -187,7 +221,7 @@ class PlayerShip(Sprite):
             
         for k, v in self.active_powerups.copy().iteritems():
             v.update()
-            if v.health == 0:
+            if v.timer <= 0:
                 del self.active_powerups[k]
     
 class PlayerLazer(Sprite):
@@ -240,6 +274,10 @@ class LazerButton(Widget):
         
         self.lazercount = 0
         
+        self.lazers_on = False
+        
+        self.timer = 0
+        
         '''
         with self.canvas:
             Color(0.5,1,1,1)
@@ -251,20 +289,18 @@ class LazerButton(Widget):
         
     def _on_joy_button_down(self, window, stickid, buttonid):
         if buttonid == 0:
-            self.spawn_lazer()
-            Clock.schedule_interval(self.spawn_lazer, self.player.firerate)
+            self.lazers_on = True
         
     def _on_joy_button_up(self, window, stickid, buttonid):
-        Clock.unschedule(self.spawn_lazer, all=True)
+        self.lazers_on = False
     
     def on_touch_down(self, touch):
         tx, ty = touch.pos
         if tx  <= self.x+self.width and ty <= self.y+self.height and tx >= self.x and ty >= self.y:
-            self.spawn_lazer()
-            Clock.schedule_interval(self.spawn_lazer, self.player.firerate)
+            self.lazers_on = True
             
     def on_touch_up(self, touch):
-        Clock.unschedule(self.spawn_lazer, all=True)
+        self.lazers_on = False
         
     def spawn_lazer(self, *ignore):
         if self.lazercount == 0:
@@ -277,7 +313,13 @@ class LazerButton(Widget):
             self.parent.projectileList.append(new_projectile)
             
     def update(self):
-        pass
+    
+        if self.lazers_on and self.timer % self.player.firerate == 0:
+            self.spawn_lazer()
+    
+        self.timer += 1
+        if self.timer >= 1000:
+            self.timer = 0
         
 class DPad(Widget):
     def __init__(self, scale, player, **kwargs):
