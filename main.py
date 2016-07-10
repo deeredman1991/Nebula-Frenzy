@@ -130,7 +130,7 @@ class Powerup(Sprite):
 class Spawner(Widget):
     def __init__(self, **kwargs):
         super(Spawner, self).__init__(**kwargs)
-        self.debug = False
+        self.debug = True
     
     def spawn_asteroid(self):
         new_asteroid = Asteroid( self.parent.scale, self.parent.background )
@@ -433,7 +433,7 @@ class Game(Widget):
         self.dpad = DPad ( self.scale, self.player, pos=self.background.pos )
         self.add_widget( self.dpad )
         
-        self.lazersound = MultiSound('audio/lazer.wav', 3)
+        self.lazersound = MultiSound('audio/lazer.wav', 6)
         
         self.lazerbutton = LazerButton ( self.scale, self.background, self.player )
         self.add_widget ( self.lazerbutton )
