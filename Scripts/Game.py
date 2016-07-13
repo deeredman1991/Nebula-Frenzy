@@ -25,16 +25,7 @@ class Game(Widget):
         self.player = PlayerShip( self.scale, background=self.background )
         self.add_widget(self.player)
         
-        #self.projectiletest = PlayerLazer( self.scale, self.player)
-        #self.add_widget(self.projectiletest)
-        
         self.projectileList = []
-        
-        #self.asteroidtest = Asteroid( self.scale, background=self.background )
-        #self.add_widget(self.asteroidtest)
-        
-        #self.asteroidSpawner = AsteroidSpawner()
-        #self.add_widget(self.asteroidSpawner)
         
         self.enemyList = []
         
@@ -52,7 +43,6 @@ class Game(Widget):
         self.add_widget(self.spawner)
         
         Clock.schedule_interval(self.update, 1.0/60.0)
-        #Clock.schedule_interval(self.asteroidSpawner.spawn_asteroid, 1.0/10)
         
     def update(self, dt):
         self.background.update()

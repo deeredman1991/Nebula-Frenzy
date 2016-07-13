@@ -17,7 +17,7 @@ class Powerup(Sprite):
             
         self.animframe = 1
         self.framecount = 1
-        self.totalPowerupTypes = 5
+        self.totalPowerupTypes = 6
         
         self.powerupID = random.randint(1,self.totalPowerupTypes)
         super(Powerup, self).__init__(scale*0.75, source='images/Powerup{}-1.png'.format(self.powerupID), **kwargs)
@@ -69,11 +69,12 @@ class ActivePowerup(object):
         
     def update(self):
         #Activate Powerups
-        if self.powerupID == 1 and self.tripped == False: #Green
-            self.player.max_shots = 1000
-            self.player.firerate = 8
-            self.timer = 480
-            self.tripped = True
+        if self.powerupID == 1: #Green
+            if self.tripped == False:
+                self.player.max_shots = 1000
+                self.player.firerate = 8
+                self.timer = 480
+                self.tripped = True
         elif self.powerupID == 2: #Red
             print("Powerup ID {} not implimented.".format(self.powerupID))
         elif self.powerupID == 3: #Blue
@@ -82,6 +83,10 @@ class ActivePowerup(object):
             print("Powerup ID {} not implimented.".format(self.powerupID))
         elif self.powerupID == 5: #Purple
             print("Powerup ID {} not implimented.".format(self.powerupID))
+        elif self.powerupID == 6: #Pink
+            print("Powerup ID {} not implimented.".format(self.powerupID))
+        else:
+            print("PowerupID {} has no activate condition see 'ActivePowerup' class.".format(self.powerupID))
         self.timer -= 1
         
         #Deactivate Powerups
@@ -90,10 +95,13 @@ class ActivePowerup(object):
                 self.player.max_shots = 3
                 self.player.firerate = 10
             elif self.powerupID == 2:
-                pass
+                print("Powerup ID {} no deactivate logic.".format(self.powerupID))
             elif self.powerupID == 3:
-                pass
+                print("Powerup ID {} no deactivate logic.".format(self.powerupID))
             elif self.powerupID == 4:
-                pass
+                print("Powerup ID {} no deactivate logic.".format(self.powerupID))
             elif self.powerupID == 5:
-                pass
+                print("Powerup ID {} no deactivate logic.".format(self.powerupID))
+            else:
+                print("PowerupID {} has no deactivate condition see 'ActivePowerup' class.".format(self.powerupID))
+            

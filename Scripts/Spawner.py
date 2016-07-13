@@ -7,7 +7,7 @@ from Asteroid import Asteroid
 class Spawner(Widget):
     def __init__(self, **kwargs):
         super(Spawner, self).__init__(**kwargs)
-        self.debug = True
+        self.powerup_debug = True
     
     def spawn_asteroid(self):
         new_asteroid = Asteroid( self.parent.scale, self.parent.background )
@@ -20,7 +20,7 @@ class Spawner(Widget):
         self.parent.powerupList.append(new_powerup)
         
     def update(self):
-        if self.debug and random.uniform(0, 100) <= 10:
+        if self.powerup_debug and random.uniform(0, 100) <= 10:
             self.spawn_powerup()
             
         if random.uniform(0, 100) <= 3:
