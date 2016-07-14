@@ -7,7 +7,7 @@ from Asteroid import Asteroid
 class Spawner(Widget):
     def __init__(self, **kwargs):
         super(Spawner, self).__init__(**kwargs)
-        self.powerup_debug = True
+        self.powerup_debug = False
     
     def spawn_asteroid(self):
         new_asteroid = Asteroid( self.parent.scale, self.parent.background )
