@@ -43,4 +43,3 @@ class Asteroid(Sprite):
             
     def on_killed(self):
         self.parent.player.score += self.score_value
-        self.parent.score_label.update()

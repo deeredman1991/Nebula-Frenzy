@@ -12,9 +12,18 @@ class PlayerShip(Sprite):
         self.lazercooldown = 1
         self.max_shots = 3
         
-        self.score = 0
+        self._score = 0
         
         self.active_powerups = {}
+        
+    @property
+    def score(self):
+        return self._score
+        
+    @score.setter
+    def score(self, value):
+        self._score = value
+        self.parent.score_label.update()
         
     def update(self):
         self.x += self.velocity_x
