@@ -1,10 +1,23 @@
 from kivy.core.window import Window
 from kivy.uix.widget import Widget
+from kivy.uix.label import Label
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 
 from Sprite import Sprite
 from Player import PlayerLazer
+
+class Score(Label): 
+    def __init__(self):
+        super(Score, self).__init__()
+        self.text = "Score Label: Could Not Get Score From Player! Did I update properly?"
+        self.font_name = "fonts/Robotech GP by Gustavo Paz L/Robotech GP.ttf"
+        self.font_size = 18
+        
+    def update(self):
+        self.text = "Score: {}".format(self.parent.player.score)
+        self.y = self.parent.background.height - self.height
+        self.center_x = self.parent.background.center_x
 
 class LazerButton(Widget):
     def __init__(self, scale, background, player, **kwargs):

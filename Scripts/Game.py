@@ -6,6 +6,7 @@ from Background import Background
 from Player import PlayerShip
 from GUI import DPad
 from GUI import LazerButton
+from GUI import Score
 from MultiSound import MultiSound
 from Spawner import Spawner
 
@@ -24,6 +25,11 @@ class Game(Widget):
         
         self.player = PlayerShip( self.scale, background=self.background )
         self.add_widget(self.player)
+        
+        self.score_label = Score()
+        self.add_widget(self.score_label)
+        self.score_label.update()
+        
         
         self.projectileList = []
         
