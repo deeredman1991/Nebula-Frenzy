@@ -102,6 +102,8 @@ class ActivePowerup(object):
                 print("Powerup ID {} no deactivate logic.".format(self.powerupID))
             elif self.powerupID == 5:
                 print("Powerup ID {} no deactivate logic.".format(self.powerupID))
+            elif self.powerupID == 6:
+                print("Powerup ID {} no deactivate logic.".format(self.powerupID))
             else:
                 print("PowerupID {} has no deactivate condition see 'ActivePowerup' class.".format(self.powerupID))
             
