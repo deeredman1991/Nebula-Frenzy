@@ -78,8 +78,8 @@ class LazerButton(Widget):
             self.parent.projectileList.append(new_projectile)
             
     def update(self):
-    
-        if self.lazers_on and self.timer % self.player.firerate == 0:
+        player_firerate = 8 if self.player.firerate < 8 else self.player.firerate
+        if self.lazers_on and self.timer % player_firerate == 0:
             self.spawn_lazer()
     
         self.timer += 1

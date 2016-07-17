@@ -72,7 +72,7 @@ class ActivePowerup(object):
         if self.powerupID == 1: #Green
             if self.tripped == False:
                 self.player.max_shots = 1000
-                self.player.firerate = 8
+                self.player.firerate -= 2 #lower numbers are faster
                 self.timer = 480
                 self.tripped = True
         elif self.powerupID == 2: #Red
@@ -93,7 +93,7 @@ class ActivePowerup(object):
         if self.timer <= 0:
             if self.powerupID == 1:
                 self.player.max_shots = 3
-                self.player.firerate = 10
+                self.player.firerate += 2 #higher numbers are slower
             elif self.powerupID == 2:
                 print("Powerup ID {} no deactivate logic.".format(self.powerupID))
             elif self.powerupID == 3:
