@@ -33,6 +33,7 @@ class Game(Widget):
         
         self.projectileList = []
         
+        self.standby_enemyList = []
         self.enemyList = []
         
         self.dpad = DPad ( self.scale, self.player, pos=self.background.pos )

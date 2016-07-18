@@ -10,9 +10,15 @@ class Spawner(Widget):
         self.powerup_debug = False
     
     def spawn_asteroid(self):
-        new_asteroid = Asteroid( self.parent.scale, self.parent.background )
-        self.parent.add_widget(new_asteroid)
-        self.parent.enemyList.append(new_asteroid)
+        standby_asteroid = len(self.parent.standby_enemyList)
+        if standby_asteroid > 0:
+            recycled_asteroid = self.parent.standby_enemyList.pop(random.randint(0, standby_asteroid-1))
+            recycled_asteroid.on_start()
+            self.parent.enemyList.append(recycled_asteroid)
+        else:
+            new_asteroid = Asteroid( self.parent.scale, self.parent.background )
+            self.parent.add_widget(new_asteroid)
+            self.parent.enemyList.append(new_asteroid)
         
     def spawn_powerup(self):
         new_powerup = Powerup (self.parent.scale, self.parent.background)
