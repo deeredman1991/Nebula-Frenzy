@@ -7,6 +7,7 @@ from Player import PlayerShip
 from GUI import DPad
 from GUI import LazerButton
 from GUI import Score
+from GUI import ShieldGUI
 from MultiSound import MultiSound
 from Spawner import Spawner
 
@@ -43,6 +44,9 @@ class Game(Widget):
         
         self.lazerbutton = LazerButton ( self.scale, self.background, self.player )
         self.add_widget ( self.lazerbutton )
+        
+        self.shield_gui = ShieldGUI(self.scale, self.background)
+        self.add_widget(self.shield_gui)
         
         self.powerupList = []
         

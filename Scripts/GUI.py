@@ -13,12 +13,33 @@ class Score(Label):
         self.text = "Score Label: Could Not Get Score From Player! Did I update properly?"
         self.font_name = "fonts/Robotech GP by Gustavo Paz L/Robotech GP.ttf"
         self.font_size = 18
+        self.height = self.font_size
         
     def update(self):
         self.text = "Score: {}".format(self.parent.player.score)
         self.y = self.parent.background.height - self.height
         self.center_x = self.parent.background.center_x
-
+        
+class ShieldGUI(Widget):
+    def __init__(self, scale, background):
+        super(ShieldGUI, self).__init__()
+        self.label = Label( text="Shields:",
+                            font_name = "fonts/Robotech GP by Gustavo Paz L/Robotech GP.ttf",
+                            font_size = 18
+        )
+        self.label.height = self.label.font_size
+        self.label.width = self.label.font_size/2*len(self.label.text)
+        self.label.y = background.height-self.label.height
+        self.add_widget(self.label)
+        
+        self.images = []
+        
+        for i in range(3):
+            self.images.append( Sprite( scale, source = "images/ShieldGui1.png" ) )
+            self.images[i].x = ( self.label.width+((self.images[i].width+5)*i) )
+            self.images[i].y = background.height-self.label.height
+            self.add_widget( self.images[i] )
+            
 class LazerButton(Widget):
     def __init__(self, scale, background, player, **kwargs):
         super(LazerButton, self).__init__(**kwargs)
