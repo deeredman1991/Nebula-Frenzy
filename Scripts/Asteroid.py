@@ -7,7 +7,12 @@ from Sprite import Sprite
 
 class Asteroid(Sprite):
     def __init__(self, scale, background=None, **kwargs):
-        super(Asteroid, self).__init__(scale*random.uniform(0.75, 1), source='images/Asteroid{}.png'.format(random.randint(1,5)), **kwargs)
+    
+        self.metal = True if random.randint(1,2) == 1 else False
+    
+        self.source = 'images/{}Asteroid{}.png'.format('Metal' if self.metal else '', random.randint(1,5))
+        
+        super(Asteroid, self).__init__(scale*random.uniform(0.75, 1), **kwargs)
         
         self.background_width = background.width
         self.background_height = background.height
