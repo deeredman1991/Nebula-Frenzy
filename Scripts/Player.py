@@ -13,6 +13,7 @@ class PlayerShip(Sprite):
         self.max_shots = 3
         
         self._score = 0
+        self._metal = 0
         
         self.active_powerups = {}
         
@@ -24,6 +25,16 @@ class PlayerShip(Sprite):
     def score(self, value):
         self._score = value
         self.parent.score_label.update()
+        
+    @property
+    def metal(self):
+        return self._metal
+        
+    @metal.setter
+    def metal(self, value):
+        self._metal = value
+        print(self._metal)
+        #self.parent.metal_label.update()
         
     def update(self):
         self.x += self.velocity_x

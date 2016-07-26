@@ -26,8 +26,6 @@ class Asteroid(Sprite):
         
         self.on_start()
         
-        self.score_value = 10
-        
     def on_start(self):
         self.pos = (random.randint(0, int(self.background_width-self.width)), int(self.background_height))
         self.rot_velocity = random.randrange(-4, 4)
@@ -35,6 +33,10 @@ class Asteroid(Sprite):
         self.velocity_x = random.uniform(-self.speed*0.1, self.speed*0.1)
         self.velocity_y = self.speed
         self.collision = False
+        
+        self.score_value = 10
+        self.metal_value = 1
+        
         
     def update(self):
         self.x -= self.velocity_x
@@ -54,3 +56,5 @@ class Asteroid(Sprite):
     def on_killed(self):
         self.y = -self.height
         self.parent.player.score += self.score_value
+        if self.metal == True:
+            self.parent.player.metal += self.metal_value
