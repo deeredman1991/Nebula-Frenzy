@@ -33,8 +33,8 @@ class PlayerShip(Sprite):
     @metal.setter
     def metal(self, value):
         self._metal = value
-        print(self._metal)
-        #self.parent.metal_label.update()
+        #print(self._metal)
+        self.parent.metal_label.update()
         
     def update(self):
         self.x += self.velocity_x

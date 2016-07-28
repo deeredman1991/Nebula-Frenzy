@@ -8,6 +8,7 @@ from GUI import DPad
 from GUI import LazerButton
 from GUI import Score
 from GUI import ShieldGUI
+from GUI import MetalGUI
 from MultiSound import MultiSound
 from Spawner import Spawner
 
@@ -31,6 +32,12 @@ class Game(Widget):
         self.add_widget(self.score_label)
         self.score_label.update()
         
+        self.metal_label = MetalGUI(self.scale, self.background)
+        self.add_widget(self.metal_label)
+        self.metal_label.update()
+        
+        self.shield_gui = ShieldGUI(self.scale, self.background)
+        self.add_widget(self.shield_gui)
         
         self.projectileList = []
         
@@ -44,9 +51,6 @@ class Game(Widget):
         
         self.lazerbutton = LazerButton ( self.scale, self.background, self.player )
         self.add_widget ( self.lazerbutton )
-        
-        self.shield_gui = ShieldGUI(self.scale, self.background)
-        self.add_widget(self.shield_gui)
         
         self.powerupList = []
         

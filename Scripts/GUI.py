@@ -40,6 +40,32 @@ class ShieldGUI(Widget):
             self.images[i].y = background.height-self.label.height
             self.add_widget( self.images[i] )
             
+class MetalGUI(Widget):
+    def __init__(self, scale, background):
+        super(MetalGUI, self).__init__()
+        
+        self.image = Sprite( scale, source = "images/MetalGui.png" )
+        self.image.x = background.width - self.image.width
+        self.image.y = background.height - self.image.height
+        self.add_widget(self.image)
+        
+        self.label = Label( text="Metal Label: Could Not Get Label From Player! Did I update properly?",
+            font_name = "fonts/Robotech GP by Gustavo Paz L/Robotech GP.ttf",
+                            font_size = 18
+        )
+        self.label.height = self.label.font_size
+        
+        self.label.y = background.height - self.label.height
+        
+        self.add_widget(self.label)
+        
+    def update(self):
+        self.label.text = str(self.parent.player.metal)
+        self.label.width = self.label.font_size/2*len(self.label.text)
+        self.label.x = self.image.x - self.label.width
+        print(self.label.text)
+            
+            
 class LazerButton(Widget):
     def __init__(self, scale, background, player, **kwargs):
         super(LazerButton, self).__init__(**kwargs)
