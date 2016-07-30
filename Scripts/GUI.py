@@ -15,6 +15,7 @@ class Score(Label):
         self.font_size = 18
         self.height = self.font_size
         
+    #Called by score property in player class.
     def update(self):
         self.text = "Score: {}".format(self.parent.player.score)
         self.y = self.parent.background.height - self.height
@@ -59,6 +60,7 @@ class MetalGUI(Widget):
         
         self.add_widget(self.label)
         
+    #Called by "Metal" Property in player class.
     def update(self):
         self.label.text = str(self.parent.player.metal)
         self.label.width = self.label.font_size/2*len(self.label.text)
