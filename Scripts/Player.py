@@ -15,6 +15,12 @@ class PlayerShip(Sprite):
         self._score = 0
         self._metal = 0
         
+        self._shield_count = 0
+        self._max_shield_count = 3
+        
+        self._hull_durability = 0
+        self._max_hull_durability = 10
+        
         self.active_powerups = {}
         
     @property
@@ -35,6 +41,42 @@ class PlayerShip(Sprite):
         self._metal = value
         #print(self._metal)
         self.parent.metal_label.update()
+        
+    @property
+    def shield_count(self):
+        return self._shield_count
+        
+    @shield_count.setter
+    def shield_count(self, value):
+        self._shield_count = value
+        print('Shield:{}/{}'.format(self._shield_count, self.max_shield_count))
+        
+    @property
+    def max_shield_count(self):
+        return self._max_shield_count
+        
+    @max_shield_count.setter
+    def max_shield_count(self, value):
+        self._max_shield_count = value
+        print('Shield:{}/{}'.format(self.shield_count, self._max_shield_count))
+        
+    @property
+    def hull_durability(self):
+        return self._hull_durability
+        
+    @hull_durability.setter
+    def hull_durability(self, value):
+        self._hull_durability = value
+        print('Hull:{}/{}'.format(self._hull_durability, self.max_hull_durability))
+        
+    @property
+    def max_hull_durability(self):
+        return self._max_hull_durability
+        
+    @max_hull_durability.setter
+    def max_hull_durability(self, value):
+        self._max_hull_durability = value
+        print('Hull:{}/{}'.format(self.hull_durability, self._max_hull_durability))
         
     def update(self):
         self.x += self.velocity_x
