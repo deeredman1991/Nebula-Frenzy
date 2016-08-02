@@ -49,7 +49,7 @@ class PlayerShip(Sprite):
     @shield_count.setter
     def shield_count(self, value):
         self._shield_count = value
-        print('Shield:{}/{}'.format(self._shield_count, self.max_shield_count))
+        self.parent.shield_gui.update()
         
     @property
     def max_shield_count(self):
@@ -58,7 +58,7 @@ class PlayerShip(Sprite):
     @max_shield_count.setter
     def max_shield_count(self, value):
         self._max_shield_count = value
-        print('Shield:{}/{}'.format(self.shield_count, self._max_shield_count))
+        pself.parent.shield_gui.update()
         
     @property
     def hull_durability(self):

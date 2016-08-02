@@ -38,6 +38,7 @@ class Game(Widget):
         
         self.shield_gui = ShieldGUI(self.scale, self.background)
         self.add_widget(self.shield_gui)
+        self.shield_gui.update()
         
         self.projectileList = []
         

@@ -34,11 +34,15 @@ class ShieldGUI(Widget):
         self.add_widget(self.label)
         
         self.images = []
-        
-        for i in range(3):
-            self.images.append( Sprite( scale, source = "images/ShieldGui1.png" ) )
+            
+    def update(self):
+        for i in range(self.parent.player.max_shield_count):
+            if i >= self.parent.player.shield_count:
+                self.images.append( Sprite( self.parent.scale, source = "images/ShieldGui1.png" ) )
+            else:
+                self.images.append( Sprite( self.parent.scale, source = "images/ShieldGui2.png" ) )
             self.images[i].x = ( self.label.width+((self.images[i].width+5)*i) )
-            self.images[i].y = background.height-self.label.height
+            self.images[i].y = self.parent.background.height-self.label.height
             self.add_widget( self.images[i] )
             
 class MetalGUI(Widget):
@@ -65,8 +69,6 @@ class MetalGUI(Widget):
         self.label.text = str(self.parent.player.metal)
         self.label.width = self.label.font_size/2*len(self.label.text)
         self.label.x = self.image.x - self.label.width
-        print(self.label.text)
-            
             
 class LazerButton(Widget):
     def __init__(self, scale, background, player, **kwargs):
