@@ -22,7 +22,7 @@ class Score(Label):
         self.center_x = self.parent.background.center_x
         
 class ShieldGUI(Widget):
-    def __init__(self, scale, background):
+    def __init__(self, background):
         super(ShieldGUI, self).__init__()
         self.label = Label( text="Shields:",
                             font_name = "fonts/Robotech GP by Gustavo Paz L/Robotech GP.ttf",
@@ -44,6 +44,30 @@ class ShieldGUI(Widget):
             self.images[i].x = ( self.label.width+((self.images[i].width+5)*i) )
             self.images[i].y = self.parent.background.height-self.label.height
             self.add_widget( self.images[i] )
+            
+class HullGUI(Widget):
+    def __init__(self):
+        super(HullGUI, self).__init__()
+        self.label = Label( text="Shields:",
+                            font_name = "fonts/Robotech GP by Gustavo Paz L/Robotech GP.ttf",
+                            font_size = 18
+        )
+        self.label.height = self.label.font_size
+        self.label.width = self.label.font_size/2*len(self.label.text)
+        self.add_widget(self.label)
+        
+        self.images = []
+        
+    def on_start(self):
+        self.label.y = self.parent.background.height-self.parent.shield_gui.height
+            
+    def update(self):
+        for i in range(self.parent.player.max_hull_durability):
+            if i < self.parent.player.hull_durability:
+                self.images.append( Sprite( self.parent.scale, source = "images/HullGui.png" ) )
+                self.images[i].x = ( self.label.width+((self.images[i].width+5)*i) )
+                self.images[i].y = self.label.y
+                self.add_widget( self.images[i] )
             
 class MetalGUI(Widget):
     def __init__(self, scale, background):

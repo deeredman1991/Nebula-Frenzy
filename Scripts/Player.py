@@ -18,7 +18,7 @@ class PlayerShip(Sprite):
         self._shield_count = 0
         self._max_shield_count = 3
         
-        self._hull_durability = 0
+        self._hull_durability = 10
         self._max_hull_durability = 10
         
         self.active_powerups = {}
@@ -48,7 +48,12 @@ class PlayerShip(Sprite):
         
     @shield_count.setter
     def shield_count(self, value):
-        self._shield_count = value
+        if value <= self.max_shield_count:
+            self._shield_count = value
+        elif value <= 0:
+            self._shield_count = 0
+        else:
+            self._shield_count = self.max_shield_count
         self.parent.shield_gui.update()
         
     @property
@@ -66,8 +71,14 @@ class PlayerShip(Sprite):
         
     @hull_durability.setter
     def hull_durability(self, value):
-        self._hull_durability = value
-        print('Hull:{}/{}'.format(self._hull_durability, self.max_hull_durability))
+        if value <= self.max_hull_durability:
+            self._hull_durability = value
+        elif value <= 0:
+            self._hull_durability = 0
+            #Death Check Here?
+        else:
+            self._hull_durability = self.max_hull_durability
+        self.parent.hull_gui.update()
         
     @property
     def max_hull_durability(self):

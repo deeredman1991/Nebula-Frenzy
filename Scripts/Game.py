@@ -9,6 +9,7 @@ from GUI import LazerButton
 from GUI import Score
 from GUI import ShieldGUI
 from GUI import MetalGUI
+from GUI import HullGUI
 from MultiSound import MultiSound
 from Spawner import Spawner
 
@@ -36,9 +37,14 @@ class Game(Widget):
         self.add_widget(self.metal_label)
         self.metal_label.update()
         
-        self.shield_gui = ShieldGUI(self.scale, self.background)
+        self.shield_gui = ShieldGUI(self.background)
         self.add_widget(self.shield_gui)
         self.shield_gui.update()
+        
+        self.hull_gui = HullGUI()
+        self.add_widget(self.hull_gui)
+        self.hull_gui.on_start()
+        self.hull_gui.update()
         
         self.projectileList = []
         
