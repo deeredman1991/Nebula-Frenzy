@@ -33,6 +33,8 @@ class ShieldGUI(Widget):
         self.label.y = background.height-self.label.height
         self.add_widget(self.label)
         
+        #self.height = self.label.height
+        
         self.images = []
             
     def update(self):
@@ -48,7 +50,7 @@ class ShieldGUI(Widget):
 class HullGUI(Widget):
     def __init__(self):
         super(HullGUI, self).__init__()
-        self.label = Label( text="Shields:",
+        self.label = Label( text="Hull:",
                             font_name = "fonts/Robotech GP by Gustavo Paz L/Robotech GP.ttf",
                             font_size = 18
         )
@@ -56,10 +58,12 @@ class HullGUI(Widget):
         self.label.width = self.label.font_size/2*len(self.label.text)
         self.add_widget(self.label)
         
+        self.height = self.label.height
+        
         self.images = []
         
     def on_start(self):
-        self.label.y = self.parent.background.height-self.parent.shield_gui.height
+        self.label.y = self.parent.shield_gui.label.y-self.height
             
     def update(self):
         for i in range(self.parent.player.max_hull_durability):
