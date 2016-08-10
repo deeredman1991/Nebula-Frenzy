@@ -1,6 +1,7 @@
 from kivy.graphics import Color, Rectangle, Rotate
 from kivy.graphics.context_instructions import PushMatrix, PopMatrix
 from kivy.core.audio import SoundLoader
+from kivy.core.window import Window
 import random
 
 from Sprite import Sprite
@@ -42,10 +43,10 @@ class Asteroid(Sprite):
         self.x -= self.velocity_x
         self.y -= self.velocity_y
         
-        self.rot.origin = self.center
         self.rot.angle += self.rot_velocity
+        self.rot.origin = self.center
         
-        if self.y < -self.height:
+        if self.y < -self.height+40:
             self.collision = True
             
         if self.collision == True:
@@ -56,10 +57,9 @@ class Asteroid(Sprite):
             
             #temporary
             parent = self.parent
+            self.parent.standby_enemyList.append(self)
             self.parent.remove_widget(self)
-            self.pos = (random.randint(0, int(self.background_width-self.width)), self.background_height+self.height+self.width)
-            parent.standby_enemyList.append(self)
-            parent.add_widget(self)
+            self.pos = (random.randint(0, int(self.background_width-self.width)), Window.height+((self.height+self.width)*2))
             
     def on_killed(self):
         self.y = -self.height

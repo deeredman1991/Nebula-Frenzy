@@ -14,6 +14,7 @@ class Spawner(Widget):
         if standby_asteroid > 0:
             recycled_asteroid = self.parent.standby_enemyList.pop(random.randint(0, standby_asteroid-1))
             recycled_asteroid.on_start()
+            self.parent.add_widget(recycled_asteroid)
             self.parent.enemyList.append(recycled_asteroid)
         else:
             new_asteroid = Asteroid( self.parent.scale, self.parent.background )
