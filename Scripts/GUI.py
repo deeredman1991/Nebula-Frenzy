@@ -4,8 +4,8 @@ from kivy.uix.label import Label
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 
-from Sprite import Sprite
-from Player import PlayerLazer
+from Scripts.Sprite import Sprite
+from Scripts.Player import PlayerLazer
 
 class Score(Label): 
     def __init__(self):

@@ -1,4 +1,4 @@
-from Sprite import Sprite
+from Scripts.Sprite import Sprite
 
 class PlayerShip(Sprite):
     def __init__(self, scale, background=None, **kwargs):
@@ -101,7 +101,7 @@ class PlayerShip(Sprite):
         elif self.y > self.parent.background.height-self.height:
             self.y = self.parent.background.height-self.height
             
-        for k, v in self.active_powerups.copy().iteritems():
+        for k, v in self.active_powerups.copy().items():
             v.update()
             if v.timer <= 0:
                 del self.active_powerups[k]

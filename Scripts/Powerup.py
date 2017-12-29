@@ -1,6 +1,6 @@
 import random
 
-from Sprite import Sprite
+from Scripts.Sprite import Sprite
 
 class Powerup(Sprite):
     def __init__(self, scale, background=None, **kwargs):

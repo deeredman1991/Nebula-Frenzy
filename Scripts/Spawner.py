@@ -1,8 +1,8 @@
 from kivy.uix.widget import Widget
 import random
 
-from Powerup import Powerup
-from Asteroid import Asteroid
+from Scripts.Powerup import Powerup
+from Scripts.Asteroid import Asteroid
 
 class Spawner(Widget):
     def __init__(self, **kwargs):

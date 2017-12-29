@@ -2,16 +2,16 @@ from kivy.core.window import Window
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
-from Background import Background
-from Player import PlayerShip
-from GUI import DPad
-from GUI import LazerButton
-from GUI import Score
-from GUI import ShieldGUI
-from GUI import MetalGUI
-from GUI import HullGUI
-from MultiSound import MultiSound
-from Spawner import Spawner
+from Scripts.Background import Background
+from Scripts.Player import PlayerShip
+from Scripts.GUI import DPad
+from Scripts.GUI import LazerButton
+from Scripts.GUI import Score
+from Scripts.GUI import ShieldGUI
+from Scripts.GUI import MetalGUI
+from Scripts.GUI import HullGUI
+from Scripts.MultiSound import MultiSound
+from Scripts.Spawner import Spawner
 
 class Game(Widget):
     def __init__(self):
